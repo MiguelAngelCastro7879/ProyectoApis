@@ -25,7 +25,7 @@ class PermissionsController extends Controller
     public function getPermissionUser(){
         return Permission::select('permissions.nombre as Permiso','u.name as User')
         ->join('permissions_roles AS pr',
-               'pr.roll_id',
+               'pr.permission_id',
                '=',
                'permissions.id')
         ->join('roles as r',
