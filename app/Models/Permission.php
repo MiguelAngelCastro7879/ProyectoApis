@@ -11,4 +11,13 @@ class Permission extends Model
     
     protected $permissions="permission";
     public $timestamps= false;
+    protected $fillable = [
+        'nombre',
+        'descripcion'
+    ];
+    
+    public function roles()
+    {
+        return $this->hasMany('App\Models\Pelicula');
+    }
 }

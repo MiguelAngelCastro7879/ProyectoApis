@@ -10,7 +10,7 @@ class PermissionsController extends Controller
     public function getAllPermissions(){
         return Permission::all();
     }
-
+ 
     public function getPermissionById(){
         return Permission::find(3);
     }
@@ -37,5 +37,42 @@ class PermissionsController extends Controller
                '=',
                'r.id')->get();
     }
-    
+    public function store(Request $request){
+        
+        $permiso=Permission::create([
+            'nombre'=>$request->nombre,
+            'descripcion'=>$request->descripcion
+        ]);
+
+        return response()->json([
+            'message' => 'Successfully created permission!',
+            'permiso'=> $permiso
+        ], 201);
+    } 
+
+    public function update($id,Request $request){
+        $permiso = Permission::find($id);
+
+        $permiso->descripcion = $request->descripcion;
+
+        $permiso->save();
+
+        return  response()->json([
+            'message' => 'Successfully updated product!',
+            'permiso' => $permiso
+        ], 201);
+    }
+
+    public function delete($id){
+        
+        $permiso = Permission::find($id);
+        $permiso->delete();
+        return  response()->json([
+            'message' => 'Successfully deleted perrmission!',
+            'permission' => $permiso
+        ], 201);
+    }
+
 }
+    
+

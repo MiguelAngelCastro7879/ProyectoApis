@@ -11,4 +11,18 @@ class Role extends Model
     
     protected $roles="roles";
     public $timestamps= false;
+
+    protected $fillable = [
+        'nombre',
+        'descripcion'
+    ];
+    
+    public function usuario()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+    public function permiso()
+    {
+        return $this->belongsTo('App\Models\Permission');
+    }
 }

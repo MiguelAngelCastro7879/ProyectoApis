@@ -1,0 +1,137 @@
+composer require laravel/passport               se instalan las dependencias de passport
+
+php artisan migrate                             Se crean las tablas que passport necesita
+
+php artisan passport:install                   Este comando creará las claves de cifrado necesarias 
+                                                para generar tokens de acceso seguro. Además, el comando creará 
+                                                clientes de "acceso personal" y "concesión de contraseña" que se 
+                                                utilizarán para generar tokens de acceso:
+
+use Laravel\Passport\HasApiTokens;              class User 
+
+
+use Laravel\Passport\Passport;                  class AuthServiceProvider
+
+
+if (! $this->app->routesAreCached()) { 
+    Passport::routes();
+    }                                           class AuthServiceProvider
+
+
+    'api' => [
+        'driver' => 'passport',                 auth.php
+        'provider' => 'users',
+    ],
+    
+
+php artisan passport:keys                       Este comando genera las claves de cifrado que Passport 
+                                                necesita para generar tokens de acceso.
+
+
+use Laravel\Passport\Client as PassportClient;  F:\Laravel\ProyectoApi1\vendor\laravel\passport\src\Passport.php
+
+
+Route::group([
+    'prefix' => 'auth'
+], function () {
+    Route::post('login', 'AuthController@login');
+    Route::post('signup', 'AuthController@signUp');
+
+    Route::group([
+      'middleware' => 'auth:api'
+    ], function() {
+        Route::get('logout', 'AuthController@logout');
+        Route::get('user', 'AuthController@user');
+    });
+});
+
+
+
+class AuthController extends Controller
+{
+    /**
+     * Registro de usuario
+     */
+    public function signUp(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string'
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
+        ]);
+
+        return response()->json([
+            'message' => 'Successfully created user!'
+        ], 201);
+    }
+
+    /**
+     * Inicio de sesión y creación de token
+     */
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+            'remember_me' => 'boolean'
+        ]);
+
+        $credentials = request(['email', 'password']);
+
+        if (!Auth::attempt($credentials))
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+
+        $user = $request->user();
+        $tokenResult = $user->createToken('Personal Access Token');
+
+        $token = $tokenResult->token;
+        if ($request->remember_me)
+            $token->expires_at = Carbon::now()->addWeeks(1);
+        $token->save();
+
+        return response()->json([
+            'access_token' => $tokenResult->accessToken,
+            'token_type' => 'Bearer',
+            'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString()
+        ]);
+    }
+
+    /**
+     * Cierre de sesión (anular el token)
+     */
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ]);
+    }
+
+    /**
+     * Obtener el objeto User como json
+     */
+    public function user(Request $request)
+    {
+        return response()->json($request->user());
+    }
+}
+
+
+
+
+Encryption keys already exist. Use the --force option to overwrite them.
+Personal access client created successfully.
+Client ID: 1
+Client secret: YLm64OsqKgfI3BAjE1qiebSHE33Omg0vyIdkL92C
+Password grant client created successfully.
+Client ID: 2
+Client secret: 5JbWK34szxqJu2bOzcxqcwfwGccFIrcs3be1CTpq

@@ -40,6 +40,15 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users',
+        ],
+
+        //Esto le indicará a su aplicación que use el 
+        //TokenGuard de Passport al autenticar las solicitudes 
+        //entrantes de la API: 
     ],
 
     /*
