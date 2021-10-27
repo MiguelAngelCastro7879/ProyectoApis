@@ -16,8 +16,8 @@ class Permission extends Model
         'descripcion'
     ];
     
-    public function roles()
+    public function permiso()
     {
-        return $this->hasMany('App\Models\Pelicula');
+        return $this->belongsToMany(Role::class, 'permissions_roles', 'permission_id');
     }
 }
