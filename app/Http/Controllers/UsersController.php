@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\User;
-use App\Models\Permission;
+use App\Models\Role;
 
 class UsersController extends Controller
 {
@@ -33,32 +33,10 @@ class UsersController extends Controller
     }
     
     public function usuarioXpermiso($id){
-        $usuario =  User::select('users.name','users.email','roles.nombre as roll', 'p.nombre as permiso')
-        ->join('roles',
-               'users.roll_id',
-               '=',
-               'roles.id')
-        ->join('permissions_roles as pr',
-               'pr.roll_id',
-               '=',
-               'roles.id')
-        ->join('permissions as p',
-               'p.id',
-               '=',
-               'pr.permission_id')
-        ->where('users.id','=', $id)
-        ->get();
-        $collection = collect($usuario);
-
-        $agrupado = $collection->mapToGroups(function ($item, $key) {
-            return ['permiso' => $item['permiso']];
-        });
+        $usuario=  User::find($id);
+        $permiso=$usuario->roll->permiso;
         return  response()->json([
-            'message' => 'Successfully updated roll!',
-            'usuario' => [
-                $usuario,
-                $agrupado
-            ]
+            'user' => $usuario,
         ], 201);
     }
 

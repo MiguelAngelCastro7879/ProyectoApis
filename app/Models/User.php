@@ -17,8 +17,8 @@ class User extends Authenticatable
     protected $users="users";
     public $timestamps=true;
     
-    public function rol()
+    public function roll()
     {
-        return $this->belongsTo('App\Models\Role');
+        return $this->belongsTo(Role::class,'roll_id');
     }
 }

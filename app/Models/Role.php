@@ -19,10 +19,10 @@ class Role extends Model
     
     public function usuario()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->hasMany(User::class, 'roll_id');
     }
     public function permiso()
     {
-        return $this->belongsTo('App\Models\Permission');
+        return $this->belongsToMany(Permission::class, 'permissions_roles', 'roll_id');
     }
 }
