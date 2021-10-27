@@ -11,8 +11,8 @@ class PermissionsController extends Controller
         return Permission::all();
     }
  
-    public function getPermissionById(){
-        return Permission::find(3);
+    public function getPermissionById($id){
+        return Permission::find($id);
     }
     
     public function getPermissionWhere(){

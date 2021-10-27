@@ -12,8 +12,8 @@ class RolesController extends Controller
         return Role::all();
     }
 
-    public function getRollById(){
-        return Role::find(1);
+    public function getRollById($id){
+        return Role::find($id);
     }
     
     public function getRolesWhere(){
